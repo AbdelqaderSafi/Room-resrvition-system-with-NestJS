@@ -1,0 +1,49 @@
+import {
+  Controller,
+  Get,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  Body,
+  ParseIntPipe,
+} from "@nestjs/common";
+import { UserService } from "./users.service";
+import type { PaginationQueryType } from "src/types/util.types";
+import type { updateUserDTO } from "./dto/user.dto";
+import { ZodValidationPipe } from "src/pipes/zod.validation.pipe";
+import { updateUserSchema } from "./util/user.validation.schema";
+import { paginationSchema } from "src/utils/api.util";
+
+@Controller("user")
+export class UserController {
+  constructor(private readonly userService: UserService) {}
+
+  @Get()
+  findAll(
+    @Query(new ZodValidationPipe(paginationSchema))
+    query: PaginationQueryType
+  ) {
+    return this.userService.findAll(query);
+  }
+
+  @Get(":id")
+  findOne(@Param("id") id: string) {
+    return this.userService.findOne(id);
+  }
+
+  @Patch(":id")
+  update(
+    @Param("id") id: string,
+    @Body(new ZodValidationPipe(updateUserSchema))
+    userUpdatePayload: updateUserDTO
+  ) {
+    return this.userService.update(id, userUpdatePayload);
+  }
+
+  @Delete(":id")
+  async delete(@Param("id") id: string) {
+    const removedUser = await this.userService.delete(id);
+    return Boolean(removedUser);
+  }
+}

@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  // url      = env("DATABASE_URL")
+}
+enum User_Role {
+  ADMIN
+  OWNER
+  GUEST
+}
+enum Room_Status {
+  ACTIVE
+  MAINTENANCE
+  DELETED
+}
+enum Booking_Status {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+model User {
+  id          String       @id @default(uuid())
+  name        String       @db.VarChar(255)
+  email       String       @unique @db.VarChar(255)
+  password    String       @db.VarChar(255)
+  role        User_Role     
+  createdAt   DateTime    @default(now()) @map("created_at")
+  isDeleted   Boolean     @default(false) @map("is_deleted")
+  
+  // Relations
+  bookings    Booking[]
+  rooms       Room[]      
+
+  @@index([name], map: "users_name_index")
+  @@map("users")
+}
+model Room {
+  id          String       @id @default(uuid())
+  ownerId     String       @map("owner_id")
+  capacity    Int       
+  roomStatus  Room_Status  @default(ACTIVE) @map("room_status")
+  price       Decimal      @db.Decimal(10, 2)       
+  createdAt   DateTime     @default(now()) @map("created_at")
+  
+  // Relations
+  owner        User        @relation(fields: [ownerId], references: [id])
+  bookings    Booking[]
+
+  @@index([capacity], map: "rooms_capacity_index")
+  @@index([price], map: "rooms_price_index")
+  @@map("rooms")
+}
+model Booking {
+  id          String       @id @default(uuid()) 
+  guestId     String       @map("guest_id")
+  roomId      String       @map("room_id")
+  checkIn    DateTime    @map("check_in")
+  checkOut     DateTime    @map("check_out")
+  status      Booking_Status @default(PENDING)
+  createdAt   DateTime    @default(now()) @map("created_at")
+  
+  
+  // Relations
+  guest       User        @relation(fields: [guestId], references: [id])
+  room        Room        @relation(fields: [roomId], references: [id])
+
+  @@index([guestId], map: "bookings_guest_id_index")
+  @@index([roomId], map: "bookings_room_id_index")
+  @@map("bookings")
+}
