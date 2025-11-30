@@ -47,9 +47,10 @@ model User {
 model Room {
   id          String       @id @default(uuid())
   ownerId     String       @map("owner_id")
+  name        String       @db.VarChar(255)
   capacity    Int       
   roomStatus  Room_Status  @default(ACTIVE) @map("room_status")
-  price       Decimal      @db.Decimal(10, 2)       
+  price       Int           
   createdAt   DateTime     @default(now()) @map("created_at")
   
   // Relations

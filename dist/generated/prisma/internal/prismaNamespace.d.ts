@@ -437,6 +437,7 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export declare const RoomScalarFieldEnum: {
     readonly id: "id";
     readonly ownerId: "ownerId";
+    readonly name: "name";
     readonly capacity: "capacity";
     readonly roomStatus: "roomStatus";
     readonly price: "price";
@@ -468,6 +469,7 @@ export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnu
 export declare const RoomOrderByRelevanceFieldEnum: {
     readonly id: "id";
     readonly ownerId: "ownerId";
+    readonly name: "name";
 };
 export type RoomOrderByRelevanceFieldEnum = (typeof RoomOrderByRelevanceFieldEnum)[keyof typeof RoomOrderByRelevanceFieldEnum];
 export declare const BookingOrderByRelevanceFieldEnum: {
@@ -482,7 +484,6 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>;
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>;
 export type EnumRoom_StatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Room_Status'>;
-export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>;
 export type EnumBooking_StatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Booking_Status'>;
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>;
 export type BatchPayload = {

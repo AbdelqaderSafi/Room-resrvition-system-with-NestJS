@@ -665,6 +665,7 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const RoomScalarFieldEnum = {
   id: 'id',
   ownerId: 'ownerId',
+  name: 'name',
   capacity: 'capacity',
   roomStatus: 'roomStatus',
   price: 'price',
@@ -707,7 +708,8 @@ export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnu
 
 export const RoomOrderByRelevanceFieldEnum = {
   id: 'id',
-  ownerId: 'ownerId'
+  ownerId: 'ownerId',
+  name: 'name'
 } as const
 
 export type RoomOrderByRelevanceFieldEnum = (typeof RoomOrderByRelevanceFieldEnum)[keyof typeof RoomOrderByRelevanceFieldEnum]
@@ -767,13 +769,6 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Room_Status'
  */
 export type EnumRoom_StatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Room_Status'>
-    
-
-
-/**
- * Reference to a field of type 'Decimal'
- */
-export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
     
 
 

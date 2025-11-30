@@ -1,26 +1,101 @@
-import { Injectable } from '@nestjs/common';
-import { CreateRoomDto } from './dto/create-room.dto';
-import { UpdateRoomDto } from './dto/update-room.dto';
+import { Injectable } from "@nestjs/common";
+
+import { DatabaseService } from "../database/database.service";
+import { CreateRoomDto, RoomResponseDTO, UpdateRoomDto } from "./dto/rooms.dto";
+import { UserResponseDTO } from "../auth/dto/auth.dto";
+import { Prisma } from "generated/prisma/browser";
+import { RoomQuery } from "./types/room.types";
+import { removeFields } from "src/utils/object.util";
 
 @Injectable()
 export class RoomsService {
-  create(createRoomDto: CreateRoomDto) {
-    return 'This action adds a new room';
+  constructor(private readonly prismaService: DatabaseService) {}
+
+  create(
+    createRoomDto: CreateRoomDto,
+    user: Express.Request["user"]
+  ): Promise<RoomResponseDTO> {
+    const dataPayload: Prisma.RoomUncheckedCreateInput = {
+      ...createRoomDto,
+      ownerId: user!.id,
+    };
+    return this.prismaService.room.create({ data: dataPayload });
   }
 
-  findAll() {
-    return `This action returns all rooms`;
+  findAll(query: RoomQuery) {
+    return this.prismaService.$transaction(async (prisma) => {
+      const whereClause: Prisma.RoomWhereInput = {};
+
+      if (query.name) {
+        whereClause.name = { contains: query.name };
+      }
+
+      if (query.minPrice || query.maxPrice) {
+        whereClause.price = {
+          gte: query.minPrice,
+          lte: query.maxPrice,
+        };
+      }
+      if (query.capacity) {
+        whereClause.capacity = {
+          gte: query.capacity,
+        };
+      }
+
+      const pagination = this.prismaService.handleQueryPagination(query);
+
+      const rooms = await prisma.room.findMany({
+        ...removeFields(pagination, ["page"]),
+        where: whereClause,
+      });
+
+      const count = await prisma.room.count({
+        where: whereClause,
+      });
+
+      return {
+        data: rooms,
+        ...this.prismaService.formatPaginationResponse({
+          page: pagination.page,
+          count,
+          limit: pagination.take,
+        }),
+      };
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} room`;
+  findOne(id: string) {
+    return this.prismaService.room.findUnique({
+      where: { id },
+      include: { bookings: true },
+    });
   }
 
-  update(id: number, updateRoomDto: UpdateRoomDto) {
-    return `This action updates a #${id} room`;
+  async update(
+    id: string,
+    updateRoomDto: UpdateRoomDto,
+    user: Express.Request["user"]
+  ): Promise<RoomResponseDTO> {
+    const dataPayload: Prisma.RoomUncheckedUpdateInput = {
+      ...updateRoomDto,
+    };
+
+    return this.prismaService.room.update({
+      where: { id, ownerId: user!.id },
+      data: dataPayload,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} room`;
+  async remove(id: string, user: Express.Request["user"]) {
+    const room = await this.prismaService.room.findUniqueOrThrow({
+      where: { id },
+    });
+    if (room.ownerId !== user!.id && user!.role !== "ADMIN") {
+      throw new Error("You are not authorized to delete this room");
+    }
+    return this.prismaService.room.update({
+      where: { id },
+      data: { roomStatus: "DELETED" },
+    });
   }
 }

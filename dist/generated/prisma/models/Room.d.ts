@@ -11,31 +11,34 @@ export type AggregateRoom = {
 };
 export type RoomAvgAggregateOutputType = {
     capacity: number | null;
-    price: runtime.Decimal | null;
+    price: number | null;
 };
 export type RoomSumAggregateOutputType = {
     capacity: number | null;
-    price: runtime.Decimal | null;
+    price: number | null;
 };
 export type RoomMinAggregateOutputType = {
     id: string | null;
     ownerId: string | null;
+    name: string | null;
     capacity: number | null;
     roomStatus: $Enums.Room_Status | null;
-    price: runtime.Decimal | null;
+    price: number | null;
     createdAt: Date | null;
 };
 export type RoomMaxAggregateOutputType = {
     id: string | null;
     ownerId: string | null;
+    name: string | null;
     capacity: number | null;
     roomStatus: $Enums.Room_Status | null;
-    price: runtime.Decimal | null;
+    price: number | null;
     createdAt: Date | null;
 };
 export type RoomCountAggregateOutputType = {
     id: number;
     ownerId: number;
+    name: number;
     capacity: number;
     roomStatus: number;
     price: number;
@@ -53,6 +56,7 @@ export type RoomSumAggregateInputType = {
 export type RoomMinAggregateInputType = {
     id?: true;
     ownerId?: true;
+    name?: true;
     capacity?: true;
     roomStatus?: true;
     price?: true;
@@ -61,6 +65,7 @@ export type RoomMinAggregateInputType = {
 export type RoomMaxAggregateInputType = {
     id?: true;
     ownerId?: true;
+    name?: true;
     capacity?: true;
     roomStatus?: true;
     price?: true;
@@ -69,6 +74,7 @@ export type RoomMaxAggregateInputType = {
 export type RoomCountAggregateInputType = {
     id?: true;
     ownerId?: true;
+    name?: true;
     capacity?: true;
     roomStatus?: true;
     price?: true;
@@ -106,9 +112,10 @@ export type RoomGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type RoomGroupByOutputType = {
     id: string;
     ownerId: string;
+    name: string;
     capacity: number;
     roomStatus: $Enums.Room_Status;
-    price: runtime.Decimal;
+    price: number;
     createdAt: Date;
     _count: RoomCountAggregateOutputType | null;
     _avg: RoomAvgAggregateOutputType | null;
@@ -125,9 +132,10 @@ export type RoomWhereInput = {
     NOT?: Prisma.RoomWhereInput | Prisma.RoomWhereInput[];
     id?: Prisma.StringFilter<"Room"> | string;
     ownerId?: Prisma.StringFilter<"Room"> | string;
+    name?: Prisma.StringFilter<"Room"> | string;
     capacity?: Prisma.IntFilter<"Room"> | number;
     roomStatus?: Prisma.EnumRoom_StatusFilter<"Room"> | $Enums.Room_Status;
-    price?: Prisma.DecimalFilter<"Room"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price?: Prisma.IntFilter<"Room"> | number;
     createdAt?: Prisma.DateTimeFilter<"Room"> | Date | string;
     owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
     bookings?: Prisma.BookingListRelationFilter;
@@ -135,6 +143,7 @@ export type RoomWhereInput = {
 export type RoomOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
     ownerId?: Prisma.SortOrder;
+    name?: Prisma.SortOrder;
     capacity?: Prisma.SortOrder;
     roomStatus?: Prisma.SortOrder;
     price?: Prisma.SortOrder;
@@ -149,9 +158,10 @@ export type RoomWhereUniqueInput = Prisma.AtLeast<{
     OR?: Prisma.RoomWhereInput[];
     NOT?: Prisma.RoomWhereInput | Prisma.RoomWhereInput[];
     ownerId?: Prisma.StringFilter<"Room"> | string;
+    name?: Prisma.StringFilter<"Room"> | string;
     capacity?: Prisma.IntFilter<"Room"> | number;
     roomStatus?: Prisma.EnumRoom_StatusFilter<"Room"> | $Enums.Room_Status;
-    price?: Prisma.DecimalFilter<"Room"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price?: Prisma.IntFilter<"Room"> | number;
     createdAt?: Prisma.DateTimeFilter<"Room"> | Date | string;
     owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
     bookings?: Prisma.BookingListRelationFilter;
@@ -159,6 +169,7 @@ export type RoomWhereUniqueInput = Prisma.AtLeast<{
 export type RoomOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
     ownerId?: Prisma.SortOrder;
+    name?: Prisma.SortOrder;
     capacity?: Prisma.SortOrder;
     roomStatus?: Prisma.SortOrder;
     price?: Prisma.SortOrder;
@@ -175,16 +186,18 @@ export type RoomScalarWhereWithAggregatesInput = {
     NOT?: Prisma.RoomScalarWhereWithAggregatesInput | Prisma.RoomScalarWhereWithAggregatesInput[];
     id?: Prisma.StringWithAggregatesFilter<"Room"> | string;
     ownerId?: Prisma.StringWithAggregatesFilter<"Room"> | string;
+    name?: Prisma.StringWithAggregatesFilter<"Room"> | string;
     capacity?: Prisma.IntWithAggregatesFilter<"Room"> | number;
     roomStatus?: Prisma.EnumRoom_StatusWithAggregatesFilter<"Room"> | $Enums.Room_Status;
-    price?: Prisma.DecimalWithAggregatesFilter<"Room"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price?: Prisma.IntWithAggregatesFilter<"Room"> | number;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<"Room"> | Date | string;
 };
 export type RoomCreateInput = {
     id?: string;
+    name: string;
     capacity: number;
     roomStatus?: $Enums.Room_Status;
-    price: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price: number;
     createdAt?: Date | string;
     owner: Prisma.UserCreateNestedOneWithoutRoomsInput;
     bookings?: Prisma.BookingCreateNestedManyWithoutRoomInput;
@@ -192,17 +205,19 @@ export type RoomCreateInput = {
 export type RoomUncheckedCreateInput = {
     id?: string;
     ownerId: string;
+    name: string;
     capacity: number;
     roomStatus?: $Enums.Room_Status;
-    price: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price: number;
     createdAt?: Date | string;
     bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutRoomInput;
 };
 export type RoomUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
     capacity?: Prisma.IntFieldUpdateOperationsInput | number;
     roomStatus?: Prisma.EnumRoom_StatusFieldUpdateOperationsInput | $Enums.Room_Status;
-    price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price?: Prisma.IntFieldUpdateOperationsInput | number;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     owner?: Prisma.UserUpdateOneRequiredWithoutRoomsNestedInput;
     bookings?: Prisma.BookingUpdateManyWithoutRoomNestedInput;
@@ -210,33 +225,37 @@ export type RoomUpdateInput = {
 export type RoomUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     ownerId?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
     capacity?: Prisma.IntFieldUpdateOperationsInput | number;
     roomStatus?: Prisma.EnumRoom_StatusFieldUpdateOperationsInput | $Enums.Room_Status;
-    price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price?: Prisma.IntFieldUpdateOperationsInput | number;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     bookings?: Prisma.BookingUncheckedUpdateManyWithoutRoomNestedInput;
 };
 export type RoomCreateManyInput = {
     id?: string;
     ownerId: string;
+    name: string;
     capacity: number;
     roomStatus?: $Enums.Room_Status;
-    price: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price: number;
     createdAt?: Date | string;
 };
 export type RoomUpdateManyMutationInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
     capacity?: Prisma.IntFieldUpdateOperationsInput | number;
     roomStatus?: Prisma.EnumRoom_StatusFieldUpdateOperationsInput | $Enums.Room_Status;
-    price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price?: Prisma.IntFieldUpdateOperationsInput | number;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type RoomUncheckedUpdateManyInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     ownerId?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
     capacity?: Prisma.IntFieldUpdateOperationsInput | number;
     roomStatus?: Prisma.EnumRoom_StatusFieldUpdateOperationsInput | $Enums.Room_Status;
-    price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price?: Prisma.IntFieldUpdateOperationsInput | number;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type RoomListRelationFilter = {
@@ -255,6 +274,7 @@ export type RoomOrderByRelevanceInput = {
 export type RoomCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     ownerId?: Prisma.SortOrder;
+    name?: Prisma.SortOrder;
     capacity?: Prisma.SortOrder;
     roomStatus?: Prisma.SortOrder;
     price?: Prisma.SortOrder;
@@ -267,6 +287,7 @@ export type RoomAvgOrderByAggregateInput = {
 export type RoomMaxOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     ownerId?: Prisma.SortOrder;
+    name?: Prisma.SortOrder;
     capacity?: Prisma.SortOrder;
     roomStatus?: Prisma.SortOrder;
     price?: Prisma.SortOrder;
@@ -275,6 +296,7 @@ export type RoomMaxOrderByAggregateInput = {
 export type RoomMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     ownerId?: Prisma.SortOrder;
+    name?: Prisma.SortOrder;
     capacity?: Prisma.SortOrder;
     roomStatus?: Prisma.SortOrder;
     price?: Prisma.SortOrder;
@@ -336,13 +358,6 @@ export type IntFieldUpdateOperationsInput = {
 export type EnumRoom_StatusFieldUpdateOperationsInput = {
     set?: $Enums.Room_Status;
 };
-export type DecimalFieldUpdateOperationsInput = {
-    set?: runtime.Decimal | runtime.DecimalJsLike | number | string;
-    increment?: runtime.Decimal | runtime.DecimalJsLike | number | string;
-    decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string;
-    multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string;
-    divide?: runtime.Decimal | runtime.DecimalJsLike | number | string;
-};
 export type RoomCreateNestedOneWithoutBookingsInput = {
     create?: Prisma.XOR<Prisma.RoomCreateWithoutBookingsInput, Prisma.RoomUncheckedCreateWithoutBookingsInput>;
     connectOrCreate?: Prisma.RoomCreateOrConnectWithoutBookingsInput;
@@ -357,17 +372,19 @@ export type RoomUpdateOneRequiredWithoutBookingsNestedInput = {
 };
 export type RoomCreateWithoutOwnerInput = {
     id?: string;
+    name: string;
     capacity: number;
     roomStatus?: $Enums.Room_Status;
-    price: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price: number;
     createdAt?: Date | string;
     bookings?: Prisma.BookingCreateNestedManyWithoutRoomInput;
 };
 export type RoomUncheckedCreateWithoutOwnerInput = {
     id?: string;
+    name: string;
     capacity: number;
     roomStatus?: $Enums.Room_Status;
-    price: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price: number;
     createdAt?: Date | string;
     bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutRoomInput;
 };
@@ -398,25 +415,28 @@ export type RoomScalarWhereInput = {
     NOT?: Prisma.RoomScalarWhereInput | Prisma.RoomScalarWhereInput[];
     id?: Prisma.StringFilter<"Room"> | string;
     ownerId?: Prisma.StringFilter<"Room"> | string;
+    name?: Prisma.StringFilter<"Room"> | string;
     capacity?: Prisma.IntFilter<"Room"> | number;
     roomStatus?: Prisma.EnumRoom_StatusFilter<"Room"> | $Enums.Room_Status;
-    price?: Prisma.DecimalFilter<"Room"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price?: Prisma.IntFilter<"Room"> | number;
     createdAt?: Prisma.DateTimeFilter<"Room"> | Date | string;
 };
 export type RoomCreateWithoutBookingsInput = {
     id?: string;
+    name: string;
     capacity: number;
     roomStatus?: $Enums.Room_Status;
-    price: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price: number;
     createdAt?: Date | string;
     owner: Prisma.UserCreateNestedOneWithoutRoomsInput;
 };
 export type RoomUncheckedCreateWithoutBookingsInput = {
     id?: string;
     ownerId: string;
+    name: string;
     capacity: number;
     roomStatus?: $Enums.Room_Status;
-    price: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price: number;
     createdAt?: Date | string;
 };
 export type RoomCreateOrConnectWithoutBookingsInput = {
@@ -434,48 +454,54 @@ export type RoomUpdateToOneWithWhereWithoutBookingsInput = {
 };
 export type RoomUpdateWithoutBookingsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
     capacity?: Prisma.IntFieldUpdateOperationsInput | number;
     roomStatus?: Prisma.EnumRoom_StatusFieldUpdateOperationsInput | $Enums.Room_Status;
-    price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price?: Prisma.IntFieldUpdateOperationsInput | number;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     owner?: Prisma.UserUpdateOneRequiredWithoutRoomsNestedInput;
 };
 export type RoomUncheckedUpdateWithoutBookingsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     ownerId?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
     capacity?: Prisma.IntFieldUpdateOperationsInput | number;
     roomStatus?: Prisma.EnumRoom_StatusFieldUpdateOperationsInput | $Enums.Room_Status;
-    price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price?: Prisma.IntFieldUpdateOperationsInput | number;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type RoomCreateManyOwnerInput = {
     id?: string;
+    name: string;
     capacity: number;
     roomStatus?: $Enums.Room_Status;
-    price: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price: number;
     createdAt?: Date | string;
 };
 export type RoomUpdateWithoutOwnerInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
     capacity?: Prisma.IntFieldUpdateOperationsInput | number;
     roomStatus?: Prisma.EnumRoom_StatusFieldUpdateOperationsInput | $Enums.Room_Status;
-    price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price?: Prisma.IntFieldUpdateOperationsInput | number;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     bookings?: Prisma.BookingUpdateManyWithoutRoomNestedInput;
 };
 export type RoomUncheckedUpdateWithoutOwnerInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
     capacity?: Prisma.IntFieldUpdateOperationsInput | number;
     roomStatus?: Prisma.EnumRoom_StatusFieldUpdateOperationsInput | $Enums.Room_Status;
-    price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price?: Prisma.IntFieldUpdateOperationsInput | number;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     bookings?: Prisma.BookingUncheckedUpdateManyWithoutRoomNestedInput;
 };
 export type RoomUncheckedUpdateManyWithoutOwnerInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
     capacity?: Prisma.IntFieldUpdateOperationsInput | number;
     roomStatus?: Prisma.EnumRoom_StatusFieldUpdateOperationsInput | $Enums.Room_Status;
-    price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    price?: Prisma.IntFieldUpdateOperationsInput | number;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type RoomCountOutputType = {
@@ -493,6 +519,7 @@ export type RoomCountOutputTypeCountBookingsArgs<ExtArgs extends runtime.Types.E
 export type RoomSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     ownerId?: boolean;
+    name?: boolean;
     capacity?: boolean;
     roomStatus?: boolean;
     price?: boolean;
@@ -504,12 +531,13 @@ export type RoomSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type RoomSelectScalar = {
     id?: boolean;
     ownerId?: boolean;
+    name?: boolean;
     capacity?: boolean;
     roomStatus?: boolean;
     price?: boolean;
     createdAt?: boolean;
 };
-export type RoomOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ownerId" | "capacity" | "roomStatus" | "price" | "createdAt", ExtArgs["result"]["room"]>;
+export type RoomOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ownerId" | "name" | "capacity" | "roomStatus" | "price" | "createdAt", ExtArgs["result"]["room"]>;
 export type RoomInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     bookings?: boolean | Prisma.Room$bookingsArgs<ExtArgs>;
@@ -524,9 +552,10 @@ export type $RoomPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
         ownerId: string;
+        name: string;
         capacity: number;
         roomStatus: $Enums.Room_Status;
-        price: runtime.Decimal;
+        price: number;
         createdAt: Date;
     }, ExtArgs["result"]["room"]>;
     composites: {};
@@ -587,9 +616,10 @@ export interface Prisma__RoomClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface RoomFieldRefs {
     readonly id: Prisma.FieldRef<"Room", 'String'>;
     readonly ownerId: Prisma.FieldRef<"Room", 'String'>;
+    readonly name: Prisma.FieldRef<"Room", 'String'>;
     readonly capacity: Prisma.FieldRef<"Room", 'Int'>;
     readonly roomStatus: Prisma.FieldRef<"Room", 'Room_Status'>;
-    readonly price: Prisma.FieldRef<"Room", 'Decimal'>;
+    readonly price: Prisma.FieldRef<"Room", 'Int'>;
     readonly createdAt: Prisma.FieldRef<"Room", 'DateTime'>;
 }
 export type RoomFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {

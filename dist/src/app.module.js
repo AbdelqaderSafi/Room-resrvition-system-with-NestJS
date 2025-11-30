@@ -12,7 +12,9 @@ const config_1 = require("@nestjs/config");
 const database_module_1 = require("./modules/database/database.module");
 const users_module_1 = require("./modules/users/users.module");
 const auth_module_1 = require("./modules/auth/auth.module");
+const auth_guard_1 = require("./modules/auth/guards/auth.guard");
 const rooms_module_1 = require("./modules/rooms/rooms.module");
+const roles_guard_1 = require("./modules/auth/guards/roles.guard");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -26,8 +28,20 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
             users_module_1.UsersModule,
             rooms_module_1.RoomsModule,
+            config_1.ConfigModule.forRoot({
+                isGlobal: true,
+            }),
         ],
-        providers: [],
+        providers: [
+            {
+                provide: "APP_GUARD",
+                useClass: auth_guard_1.AuthGuard,
+            },
+            {
+                provide: "APP_GUARD",
+                useClass: roles_guard_1.RolesGuard,
+            },
+        ],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

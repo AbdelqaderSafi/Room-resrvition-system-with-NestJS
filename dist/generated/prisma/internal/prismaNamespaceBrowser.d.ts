@@ -51,6 +51,7 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export declare const RoomScalarFieldEnum: {
     readonly id: "id";
     readonly ownerId: "ownerId";
+    readonly name: "name";
     readonly capacity: "capacity";
     readonly roomStatus: "roomStatus";
     readonly price: "price";
@@ -82,6 +83,7 @@ export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnu
 export declare const RoomOrderByRelevanceFieldEnum: {
     readonly id: "id";
     readonly ownerId: "ownerId";
+    readonly name: "name";
 };
 export type RoomOrderByRelevanceFieldEnum = (typeof RoomOrderByRelevanceFieldEnum)[keyof typeof RoomOrderByRelevanceFieldEnum];
 export declare const BookingOrderByRelevanceFieldEnum: {

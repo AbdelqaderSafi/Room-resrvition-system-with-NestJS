@@ -4,7 +4,9 @@ import { DatabaseModule } from "./modules/database/database.module";
 import { DatabaseService } from "./modules/database/database.service";
 import { UsersModule } from "./modules/users/users.module";
 import { AuthModule } from "./modules/auth/auth.module";
-import { RoomsModule } from './modules/rooms/rooms.module';
+import { AuthGuard } from "./modules/auth/guards/auth.guard";
+import { RoomsModule } from "./modules/rooms/rooms.module";
+import { RolesGuard } from "./modules/auth/guards/roles.guard";
 
 @Module({
   imports: [
@@ -15,7 +17,19 @@ import { RoomsModule } from './modules/rooms/rooms.module';
     AuthModule,
     UsersModule,
     RoomsModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
   ],
-  providers: [],
+  providers: [
+    {
+      provide: "APP_GUARD",
+      useClass: AuthGuard,
+    },
+    {
+      provide: "APP_GUARD",
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}

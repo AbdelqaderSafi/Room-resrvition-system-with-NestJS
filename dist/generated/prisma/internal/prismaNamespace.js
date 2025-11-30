@@ -82,6 +82,7 @@ exports.UserScalarFieldEnum = {
 exports.RoomScalarFieldEnum = {
     id: 'id',
     ownerId: 'ownerId',
+    name: 'name',
     capacity: 'capacity',
     roomStatus: 'roomStatus',
     price: 'price',
@@ -108,7 +109,8 @@ exports.UserOrderByRelevanceFieldEnum = {
 };
 exports.RoomOrderByRelevanceFieldEnum = {
     id: 'id',
-    ownerId: 'ownerId'
+    ownerId: 'ownerId',
+    name: 'name'
 };
 exports.BookingOrderByRelevanceFieldEnum = {
     id: 'id',

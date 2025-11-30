@@ -4,11 +4,13 @@ import { AuthService } from "./auth.service";
 import type { LoginDTO, RegisterDTO, UserResponseDTO } from "./dto/auth.dto";
 import { registerValidationSchema } from "./util/auth.validation.schema";
 import { ZodValidationPipe } from "src/pipes/zod.validation.pipe";
+import { IsPublic } from "src/decorators/public.decorator";
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post("register")
+  @IsPublic()
   async create(
     @Body(new ZodValidationPipe(registerValidationSchema))
     registerDTO: RegisterDTO
@@ -18,6 +20,7 @@ export class AuthController {
   }
 
   @Post("login")
+  @IsPublic()
   login(@Body() loginDTO: LoginDTO): Promise<UserResponseDTO> {
     return this.authService.login(loginDTO);
   }

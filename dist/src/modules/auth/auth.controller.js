@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const auth_validation_schema_1 = require("./util/auth.validation.schema");
 const zod_validation_pipe_1 = require("../../pipes/zod.validation.pipe");
+const public_decorator_1 = require("../../decorators/public.decorator");
 let AuthController = class AuthController {
     authService;
     constructor(authService) {
@@ -36,6 +37,7 @@ let AuthController = class AuthController {
 exports.AuthController = AuthController;
 __decorate([
     (0, common_1.Post)("register"),
+    (0, public_decorator_1.IsPublic)(),
     __param(0, (0, common_1.Body)(new zod_validation_pipe_1.ZodValidationPipe(auth_validation_schema_1.registerValidationSchema))),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -43,6 +45,7 @@ __decorate([
 ], AuthController.prototype, "create", null);
 __decorate([
     (0, common_1.Post)("login"),
+    (0, public_decorator_1.IsPublic)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),

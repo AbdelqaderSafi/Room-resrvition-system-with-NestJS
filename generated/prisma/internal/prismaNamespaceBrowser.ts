@@ -86,6 +86,7 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const RoomScalarFieldEnum = {
   id: 'id',
   ownerId: 'ownerId',
+  name: 'name',
   capacity: 'capacity',
   roomStatus: 'roomStatus',
   price: 'price',
@@ -128,7 +129,8 @@ export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnu
 
 export const RoomOrderByRelevanceFieldEnum = {
   id: 'id',
-  ownerId: 'ownerId'
+  ownerId: 'ownerId',
+  name: 'name'
 } as const
 
 export type RoomOrderByRelevanceFieldEnum = (typeof RoomOrderByRelevanceFieldEnum)[keyof typeof RoomOrderByRelevanceFieldEnum]
