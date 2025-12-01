@@ -49,6 +49,10 @@ export class AuthGuard implements CanActivate {
         where: { id: payload.sub },
       });
 
+      if (user.isDeleted) {
+        throw new UnauthorizedException("User account has been deleted");
+      }
+
       // attach user to request
       request.user = {
         ...removeFields(user, ["password"]),

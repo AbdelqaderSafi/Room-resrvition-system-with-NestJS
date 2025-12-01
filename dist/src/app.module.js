@@ -15,6 +15,7 @@ const auth_module_1 = require("./modules/auth/auth.module");
 const auth_guard_1 = require("./modules/auth/guards/auth.guard");
 const rooms_module_1 = require("./modules/rooms/rooms.module");
 const roles_guard_1 = require("./modules/auth/guards/roles.guard");
+const bookings_module_1 = require("./modules/bookings/bookings.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -31,6 +32,7 @@ exports.AppModule = AppModule = __decorate([
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
             }),
+            bookings_module_1.BookingsModule,
         ],
         providers: [
             {

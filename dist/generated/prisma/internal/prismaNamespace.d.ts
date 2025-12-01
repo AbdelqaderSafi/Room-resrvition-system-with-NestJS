@@ -450,6 +450,7 @@ export declare const BookingScalarFieldEnum: {
     readonly roomId: "roomId";
     readonly checkIn: "checkIn";
     readonly checkOut: "checkOut";
+    readonly totalPrice: "totalPrice";
     readonly status: "status";
     readonly createdAt: "createdAt";
 };

@@ -79,6 +79,7 @@ exports.BookingScalarFieldEnum = {
     roomId: 'roomId',
     checkIn: 'checkIn',
     checkOut: 'checkOut',
+    totalPrice: 'totalPrice',
     status: 'status',
     createdAt: 'createdAt'
 };

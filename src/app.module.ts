@@ -7,6 +7,7 @@ import { AuthModule } from "./modules/auth/auth.module";
 import { AuthGuard } from "./modules/auth/guards/auth.guard";
 import { RoomsModule } from "./modules/rooms/rooms.module";
 import { RolesGuard } from "./modules/auth/guards/roles.guard";
+import { BookingsModule } from './modules/bookings/bookings.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { RolesGuard } from "./modules/auth/guards/roles.guard";
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    BookingsModule,
   ],
   providers: [
     {

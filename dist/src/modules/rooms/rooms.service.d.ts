@@ -14,13 +14,13 @@ export declare class RoomsService {
             totalPages: number;
         };
         data: {
-            id: string;
-            ownerId: string;
             name: string;
+            id: string;
+            createdAt: Date;
+            ownerId: string;
             capacity: number;
             roomStatus: import("generated/prisma/browser").Room_Status;
             price: number;
-            createdAt: Date;
         }[];
     }>;
     findOne(id: string): Prisma.Prisma__RoomClient<({
@@ -31,27 +31,28 @@ export declare class RoomsService {
             roomId: string;
             checkIn: Date;
             checkOut: Date;
+            totalPrice: number;
             status: import("generated/prisma/browser").Booking_Status;
         }[];
     } & {
-        id: string;
-        ownerId: string;
         name: string;
+        id: string;
+        createdAt: Date;
+        ownerId: string;
         capacity: number;
         roomStatus: import("generated/prisma/browser").Room_Status;
         price: number;
-        createdAt: Date;
     }) | null, null, import("@prisma/client/runtime/library").DefaultArgs, {
         omit: Prisma.GlobalOmitConfig | undefined;
     }>;
     update(id: string, updateRoomDto: UpdateRoomDto, user: Express.Request["user"]): Promise<RoomResponseDTO>;
     remove(id: string, user: Express.Request["user"]): Promise<{
-        id: string;
-        ownerId: string;
         name: string;
+        id: string;
+        createdAt: Date;
+        ownerId: string;
         capacity: number;
         roomStatus: import("generated/prisma/browser").Room_Status;
         price: number;
-        createdAt: Date;
     }>;
 }
