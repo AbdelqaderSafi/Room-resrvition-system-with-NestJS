@@ -1,4 +1,3 @@
-import e from "express";
 import { Prisma, Room, User } from "generated/prisma/client";
 
 export type CreateRoomDto = Pick<

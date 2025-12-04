@@ -1,9 +1,17 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+} from "@nestjs/common";
 import { LoginDTO, RegisterDTO, UserResponseDTO } from "./dto/auth.dto";
 import * as argon from "argon2";
 import { UserService } from "../users/users.service";
 import { JwtService } from "@nestjs/jwt";
 import { User_Role } from "generated/prisma/client";
+import {
+  InvalidCredentialsException,
+  DuplicateResourceException,
+} from "src/exceptions/custom.exceptions";
 
 @Injectable()
 export class AuthService {
@@ -13,6 +21,12 @@ export class AuthService {
   ) {}
 
   async register(registerDTO: RegisterDTO): Promise<UserResponseDTO> {
+    // Check if user already exists
+    const existingUser = await this.userService.findByEmail(registerDTO.email);
+    if (existingUser) {
+      throw new DuplicateResourceException("User", "email");
+    }
+
     const hashedPassword = await this.hashPassword(registerDTO.password);
     const createdUser = await this.userService.create({
       ...registerDTO,
@@ -28,11 +42,11 @@ export class AuthService {
   async login(loginDto: LoginDTO): Promise<UserResponseDTO> {
     const foundUser = await this.userService.findByEmail(loginDto.email);
     if (!foundUser) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new InvalidCredentialsException();
     }
 
     if (foundUser.isDeleted) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new InvalidCredentialsException();
     }
 
     const isPasswordValid = await this.verifyPassword(
@@ -40,7 +54,7 @@ export class AuthService {
       foundUser.password
     );
     if (!isPasswordValid) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new InvalidCredentialsException();
     }
 
     const token = this.generateJwtToken(foundUser.id, foundUser.role);

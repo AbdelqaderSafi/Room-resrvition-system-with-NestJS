@@ -1,11 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 
 import { DatabaseService } from "../database/database.service";
 import { CreateRoomDto, RoomResponseDTO, UpdateRoomDto } from "./dto/rooms.dto";
-import { UserResponseDTO } from "../auth/dto/auth.dto";
 import { Prisma } from "generated/prisma/browser";
 import { RoomQuery } from "./types/room.types";
 import { removeFields } from "src/utils/object.util";
+import { UnauthorizedAccessException } from "src/exceptions/custom.exceptions";
 
 @Injectable()
 export class RoomsService {
@@ -41,6 +41,41 @@ export class RoomsService {
           gte: query.capacity,
         };
       }
+      if (query.checkIn && query.checkOut) {
+        // Filter rooms that don't have overlapping bookings
+        whereClause.bookings = {
+          none: {
+            AND: [
+              { status: { not: "CANCELLED" } },
+              {
+                OR: [
+                  {
+                    // Booking starts during the requested period
+                    checkIn: {
+                      gte: new Date(query.checkIn),
+                      lt: new Date(query.checkOut),
+                    },
+                  },
+                  {
+                    // Booking ends during the requested period
+                    checkOut: {
+                      gt: new Date(query.checkIn),
+                      lte: new Date(query.checkOut),
+                    },
+                  },
+                  {
+                    // Booking spans the entire requested period
+                    AND: [
+                      { checkIn: { lte: new Date(query.checkIn) } },
+                      { checkOut: { gte: new Date(query.checkOut) } },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        };
+      }
 
       const pagination = this.prismaService.handleQueryPagination(query);
 
@@ -64,11 +99,17 @@ export class RoomsService {
     });
   }
 
-  findOne(id: string) {
-    return this.prismaService.room.findUnique({
+  async findOne(id: string) {
+    const room = await this.prismaService.room.findUnique({
       where: { id },
       include: { bookings: true },
     });
+
+    if (!room) {
+      throw new NotFoundException(`Room with id ${id} not found`);
+    }
+
+    return room;
   }
 
   async update(
@@ -87,12 +128,18 @@ export class RoomsService {
   }
 
   async remove(id: string, user: Express.Request["user"]) {
-    const room = await this.prismaService.room.findUniqueOrThrow({
+    const room = await this.prismaService.room.findUnique({
       where: { id },
     });
-    if (room.ownerId !== user!.id && user!.role !== "ADMIN") {
-      throw new Error("You are not authorized to delete this room");
+
+    if (!room) {
+      throw new NotFoundException(`Room with id ${id} not found`);
     }
+
+    if (room.ownerId !== user!.id && user!.role !== "ADMIN") {
+      throw new UnauthorizedAccessException("room");
+    }
+
     return this.prismaService.room.update({
       where: { id },
       data: { roomStatus: "DELETED" },

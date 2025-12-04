@@ -1,6 +1,5 @@
 import { DatabaseService } from "../database/database.service";
 import { CreateRoomDto, RoomResponseDTO, UpdateRoomDto } from "./dto/rooms.dto";
-import { Prisma } from "generated/prisma/browser";
 import { RoomQuery } from "./types/room.types";
 export declare class RoomsService {
     private readonly prismaService;
@@ -23,16 +22,16 @@ export declare class RoomsService {
             price: number;
         }[];
     }>;
-    findOne(id: string): Prisma.Prisma__RoomClient<({
+    findOne(id: string): Promise<{
         bookings: {
             id: string;
             createdAt: Date;
+            checkOut: Date;
+            checkIn: Date;
+            status: import("generated/prisma/browser").Booking_Status;
             guestId: string;
             roomId: string;
-            checkIn: Date;
-            checkOut: Date;
             totalPrice: number;
-            status: import("generated/prisma/browser").Booking_Status;
         }[];
     } & {
         name: string;
@@ -42,8 +41,6 @@ export declare class RoomsService {
         capacity: number;
         roomStatus: import("generated/prisma/browser").Room_Status;
         price: number;
-    }) | null, null, import("@prisma/client/runtime/library").DefaultArgs, {
-        omit: Prisma.GlobalOmitConfig | undefined;
     }>;
     update(id: string, updateRoomDto: UpdateRoomDto, user: Express.Request["user"]): Promise<RoomResponseDTO>;
     remove(id: string, user: Express.Request["user"]): Promise<{

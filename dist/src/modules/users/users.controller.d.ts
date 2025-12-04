@@ -13,25 +13,21 @@ export declare class UserController {
         createdAt: Date;
         isDeleted: boolean;
     }, "password">>>;
-    findOne(id: string): import("../../../generated/prisma/models").Prisma__UserClient<{
+    findOne(id: string): Promise<{
         name: string;
         id: string;
         email: string;
         role: import("../../../generated/prisma/enums").User_Role;
         createdAt: Date;
         isDeleted: boolean;
-    } | null, null, import("@prisma/client/runtime/library").DefaultArgs, {
-        omit: import("../../../generated/prisma/internal/prismaNamespace").GlobalOmitConfig | undefined;
     }>;
-    update(id: string, userUpdatePayload: updateUserDTO): import("../../../generated/prisma/models").Prisma__UserClient<{
+    update(id: string, userUpdatePayload: updateUserDTO): Promise<{
         name: string;
         id: string;
         email: string;
         role: import("../../../generated/prisma/enums").User_Role;
         createdAt: Date;
         isDeleted: boolean;
-    }, never, import("@prisma/client/runtime/library").DefaultArgs, {
-        omit: import("../../../generated/prisma/internal/prismaNamespace").GlobalOmitConfig | undefined;
     }>;
     delete(id: string): Promise<boolean>;
 }

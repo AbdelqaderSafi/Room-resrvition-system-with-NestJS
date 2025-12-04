@@ -1,17 +1,18 @@
-import { Injectable, Query } from "@nestjs/common";
+import {
+  Injectable,
+  Query,
+  NotFoundException,
+  BadRequestException,
+} from "@nestjs/common";
 import {
   CreateBookingDto,
   CreateBookingResponseDTO,
   updateBookingStatus,
 } from "./dto/booking.dto";
 import { DatabaseService } from "../database/database.service";
-import { omit } from "zod/v4/core/util.cjs";
-import { User } from "src/decorators/user.decorator";
-import { ZodValidationPipe } from "src/pipes/zod.validation.pipe";
-import { paginationSchema } from "src/utils/api.util";
 import { PaginationQueryType } from "src/types/util.types";
 import { removeFields } from "src/utils/object.util";
-// import { UpdateBookingDto } from "./dto/update-booking.dto";
+import { RoomNotAvailableException } from "src/exceptions/custom.exceptions";
 
 @Injectable()
 export class BookingsService {
@@ -43,12 +44,21 @@ export class BookingsService {
       });
 
       if (conflictingBooking) {
-        throw new Error("Room is not available for the selected dates");
+        throw new RoomNotAvailableException(
+          createBookingDto.checkIn,
+          createBookingDto.checkOut
+        );
       }
 
       const room = await prisma.room.findUniqueOrThrow({
         where: { id: createBookingDto.roomId, roomStatus: "ACTIVE" },
       });
+
+      if (!room) {
+        throw new NotFoundException(
+          `Room with id ${createBookingDto.roomId} not found or not active`
+        );
+      }
 
       const days = this.calculateNumberOfDays(
         createBookingDto.checkIn,
@@ -143,6 +153,11 @@ export class BookingsService {
 
   private calculateNumberOfDays(checkIn: Date, checkOut: Date): number {
     const diffInMs = checkOut.getTime() - checkIn.getTime();
+    if (diffInMs <= 0) {
+      throw new BadRequestException(
+        "Check-out date must be after check-in date"
+      );
+    }
     const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
     return diffInDays;
   }

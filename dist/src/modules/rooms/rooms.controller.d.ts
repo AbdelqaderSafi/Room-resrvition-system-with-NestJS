@@ -23,16 +23,16 @@ export declare class RoomsController {
             price: number;
         }[];
     }>;
-    findOne(id: string): import("../../../generated/prisma/models").Prisma__RoomClient<({
+    findOne(id: string): Promise<{
         bookings: {
             id: string;
             createdAt: Date;
+            checkOut: Date;
+            checkIn: Date;
+            status: import("../../../generated/prisma/enums").Booking_Status;
             guestId: string;
             roomId: string;
-            checkIn: Date;
-            checkOut: Date;
             totalPrice: number;
-            status: import("../../../generated/prisma/enums").Booking_Status;
         }[];
     } & {
         name: string;
@@ -42,8 +42,6 @@ export declare class RoomsController {
         capacity: number;
         roomStatus: import("../../../generated/prisma/enums").Room_Status;
         price: number;
-    }) | null, null, import("@prisma/client/runtime/library").DefaultArgs, {
-        omit: import("../../../generated/prisma/internal/prismaNamespace").GlobalOmitConfig | undefined;
     }>;
     update(id: string, updatePayload: UpdateRoomDto, user: UserResponseDTO["userData"]): Promise<RoomResponseDTO>;
     remove(id: string, user: UserResponseDTO["userData"]): Promise<{

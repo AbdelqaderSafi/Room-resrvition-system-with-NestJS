@@ -1,5 +1,3 @@
-// import { Prisma } from "@prisma/client";
-
 import {
   Booking,
   Prisma,

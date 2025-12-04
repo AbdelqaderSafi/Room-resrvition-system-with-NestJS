@@ -48,24 +48,38 @@ let UserService = class UserService {
             where: { email },
         });
     }
-    findOne(id) {
-        return this.prismaService.user.findUnique({
+    async findOne(id) {
+        const user = await this.prismaService.user.findUnique({
             where: { id },
             omit: { password: true },
         });
-    }
-    update(id, userUpdatePayload) {
-        {
-            return this.prismaService.user.update({
-                where: { id },
-                data: userUpdatePayload,
-                omit: {
-                    password: true,
-                },
-            });
+        if (!user) {
+            throw new common_1.NotFoundException(`User with id ${id} not found`);
         }
+        return user;
     }
-    delete(id) {
+    async update(id, userUpdatePayload) {
+        const user = await this.prismaService.user.findUnique({
+            where: { id },
+        });
+        if (!user) {
+            throw new common_1.NotFoundException(`User with id ${id} not found`);
+        }
+        return this.prismaService.user.update({
+            where: { id },
+            data: userUpdatePayload,
+            omit: {
+                password: true,
+            },
+        });
+    }
+    async delete(id) {
+        const user = await this.prismaService.user.findUnique({
+            where: { id },
+        });
+        if (!user) {
+            throw new common_1.NotFoundException(`User with id ${id} not found`);
+        }
         return this.prismaService.user.update({
             where: { id },
             data: { isDeleted: true },

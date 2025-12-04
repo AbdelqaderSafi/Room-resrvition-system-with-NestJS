@@ -47,6 +47,7 @@ const common_1 = require("@nestjs/common");
 const argon = __importStar(require("argon2"));
 const users_service_1 = require("../users/users.service");
 const jwt_1 = require("@nestjs/jwt");
+const custom_exceptions_1 = require("../../exceptions/custom.exceptions");
 let AuthService = class AuthService {
     userService;
     jwtService;
@@ -55,6 +56,10 @@ let AuthService = class AuthService {
         this.jwtService = jwtService;
     }
     async register(registerDTO) {
+        const existingUser = await this.userService.findByEmail(registerDTO.email);
+        if (existingUser) {
+            throw new custom_exceptions_1.DuplicateResourceException("User", "email");
+        }
         const hashedPassword = await this.hashPassword(registerDTO.password);
         const createdUser = await this.userService.create({
             ...registerDTO,
@@ -69,14 +74,14 @@ let AuthService = class AuthService {
     async login(loginDto) {
         const foundUser = await this.userService.findByEmail(loginDto.email);
         if (!foundUser) {
-            throw new common_1.UnauthorizedException("Invalid credentials");
+            throw new custom_exceptions_1.InvalidCredentialsException();
         }
         if (foundUser.isDeleted) {
-            throw new common_1.UnauthorizedException("Invalid credentials");
+            throw new custom_exceptions_1.InvalidCredentialsException();
         }
         const isPasswordValid = await this.verifyPassword(loginDto.password, foundUser.password);
         if (!isPasswordValid) {
-            throw new common_1.UnauthorizedException("Invalid credentials");
+            throw new custom_exceptions_1.InvalidCredentialsException();
         }
         const token = this.generateJwtToken(foundUser.id, foundUser.role);
         return {

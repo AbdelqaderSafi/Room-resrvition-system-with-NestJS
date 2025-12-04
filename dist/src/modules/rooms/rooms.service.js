@@ -13,6 +13,7 @@ exports.RoomsService = void 0;
 const common_1 = require("@nestjs/common");
 const database_service_1 = require("../database/database.service");
 const object_util_1 = require("../../utils/object.util");
+const custom_exceptions_1 = require("../../exceptions/custom.exceptions");
 let RoomsService = class RoomsService {
     prismaService;
     constructor(prismaService) {
@@ -42,6 +43,37 @@ let RoomsService = class RoomsService {
                     gte: query.capacity,
                 };
             }
+            if (query.checkIn && query.checkOut) {
+                whereClause.bookings = {
+                    none: {
+                        AND: [
+                            { status: { not: "CANCELLED" } },
+                            {
+                                OR: [
+                                    {
+                                        checkIn: {
+                                            gte: new Date(query.checkIn),
+                                            lt: new Date(query.checkOut),
+                                        },
+                                    },
+                                    {
+                                        checkOut: {
+                                            gt: new Date(query.checkIn),
+                                            lte: new Date(query.checkOut),
+                                        },
+                                    },
+                                    {
+                                        AND: [
+                                            { checkIn: { lte: new Date(query.checkIn) } },
+                                            { checkOut: { gte: new Date(query.checkOut) } },
+                                        ],
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                };
+            }
             const pagination = this.prismaService.handleQueryPagination(query);
             const rooms = await prisma.room.findMany({
                 ...(0, object_util_1.removeFields)(pagination, ["page"]),
@@ -60,11 +92,15 @@ let RoomsService = class RoomsService {
             };
         });
     }
-    findOne(id) {
-        return this.prismaService.room.findUnique({
+    async findOne(id) {
+        const room = await this.prismaService.room.findUnique({
             where: { id },
             include: { bookings: true },
         });
+        if (!room) {
+            throw new common_1.NotFoundException(`Room with id ${id} not found`);
+        }
+        return room;
     }
     async update(id, updateRoomDto, user) {
         const dataPayload = {
@@ -76,11 +112,14 @@ let RoomsService = class RoomsService {
         });
     }
     async remove(id, user) {
-        const room = await this.prismaService.room.findUniqueOrThrow({
+        const room = await this.prismaService.room.findUnique({
             where: { id },
         });
+        if (!room) {
+            throw new common_1.NotFoundException(`Room with id ${id} not found`);
+        }
         if (room.ownerId !== user.id && user.role !== "ADMIN") {
-            throw new Error("You are not authorized to delete this room");
+            throw new custom_exceptions_1.UnauthorizedAccessException("room");
         }
         return this.prismaService.room.update({
             where: { id },

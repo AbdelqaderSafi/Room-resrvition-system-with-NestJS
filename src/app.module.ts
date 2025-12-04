@@ -1,13 +1,12 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { DatabaseModule } from "./modules/database/database.module";
-import { DatabaseService } from "./modules/database/database.service";
 import { UsersModule } from "./modules/users/users.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { AuthGuard } from "./modules/auth/guards/auth.guard";
 import { RoomsModule } from "./modules/rooms/rooms.module";
 import { RolesGuard } from "./modules/auth/guards/roles.guard";
-import { BookingsModule } from './modules/bookings/bookings.module';
+import { BookingsModule } from "./modules/bookings/bookings.module";
 
 @Module({
   imports: [

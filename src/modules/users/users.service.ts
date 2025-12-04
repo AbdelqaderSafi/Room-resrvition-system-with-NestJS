@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 
 import { RegisterDTO, UserResponseDTO } from "../auth/dto/auth.dto";
 import { DatabaseService } from "../database/database.service";
-import { Prisma, PrismaClient, User } from "generated/prisma/client";
+import { User } from "generated/prisma/client";
 import { removeFields } from "src/utils/object.util";
 import {
   PaginationQueryType,
@@ -50,26 +50,48 @@ export class UserService {
     });
   }
 
-  findOne(id: string) {
-    return this.prismaService.user.findUnique({
+  async findOne(id: string) {
+    const user = await this.prismaService.user.findUnique({
       where: { id },
       omit: { password: true },
     });
-  }
 
-  update(id: string, userUpdatePayload: updateUserDTO) {
-    {
-      return this.prismaService.user.update({
-        where: { id },
-        data: userUpdatePayload,
-        omit: {
-          password: true,
-        },
-      });
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
     }
+
+    return user;
   }
 
-  delete(id: string) {
+  async update(id: string, userUpdatePayload: updateUserDTO) {
+    // Check if user exists
+    const user = await this.prismaService.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    return this.prismaService.user.update({
+      where: { id },
+      data: userUpdatePayload,
+      omit: {
+        password: true,
+      },
+    });
+  }
+
+  async delete(id: string) {
+    // Check if user exists
+    const user = await this.prismaService.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
     return this.prismaService.user.update({
       where: { id },
       data: { isDeleted: true },

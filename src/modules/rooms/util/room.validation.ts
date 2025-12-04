@@ -18,4 +18,6 @@ export const roomPaginationSchema = paginationSchema.extend({
   minPrice: z.coerce.number().min(0).optional(),
   maxPrice: z.coerce.number().min(0).optional(),
   capacity: z.coerce.number().min(1).max(50).optional(),
+  checkIn: z.string().optional(),
+  checkOut: z.string().optional(),
 }) satisfies ZodType<RoomQuery>;

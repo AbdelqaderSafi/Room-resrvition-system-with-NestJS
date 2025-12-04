@@ -5,4 +5,6 @@ export type RoomQuery = PaginationQueryType & {
   minPrice?: number;
   maxPrice?: number;
   capacity?: number;
+  checkIn?: string;
+  checkOut?: string;
 };
